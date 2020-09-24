@@ -23,13 +23,14 @@ pipeline {
         sh 'sudo apt-get update && sudo apt-get install -y golang-go debootstrap rsync gpg squashfs-tools git build-essential'
         sh 'go get -d -v github.com/lxc/distrobuilder/distrobuilder'
         sh 'cd $HOME/go/src/github.com/lxc/distrobuilder && make'
-        sh 'mv rootfs.tar.xz keystone.tar.xz'
-        sh 'mv meta.tar.xz keystone-meta.tar.xz'
       }
     }
     stage('Build Keystone') {
       steps{
         sh "sudo $HOME/go/bin/distrobuilder build-lxc containers/images/keystone.yaml -o image.release=${RELEASE}"
+        sh 'mv rootfs.tar.xz keystone.tar.xz'
+        sh 'mv meta.tar.xz keystone-meta.tar.xz'
+
       }
     }
   }
