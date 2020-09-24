@@ -1,0 +1,39 @@
+pipeline {
+  agent {
+    label 'openstack'
+  }
+  environment {
+    BRANCH = 'master'
+    ARCH = 'x86_64'
+    DISTRO = 'ubuntu'
+    RELEASE = 'focal'
+
+  }
+  stages {
+    stage('Get configurator code') {
+      steps{
+        dir('sources') {
+            git branch: "${BRANCH}",
+                url: 'https://github.com/fortnebula/bullpup.git'
+          }
+      }
+    }
+    stage('Prep Builder') {
+      steps{
+        sh 'sudo apt install -y golang-go debootstrap rsync gpg squashfs-tools git'
+        sh 'go get -d -v github.com/lxc/distrobuilder/distrobuilder'
+        sh 'cd $HOME/go/src/github.com/lxc/distrobuilder && make'
+      }
+    }
+    stage('Build Keystone') {
+      steps{
+        sh "sudo $HOME/go/bin/distrobuilder containers/images/keystone.yaml -o image.release=${RELEASE}"
+      }
+    }
+  }
+  post {
+      always {
+          archiveArtifacts artifacts: "root.tar.xz", fingerprint: true
+      }
+  }
+}
