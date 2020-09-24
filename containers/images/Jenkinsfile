@@ -10,7 +10,7 @@ pipeline {
 
   }
   stages {
-    stage('Get configurator code') {
+    stage('Clone Repos') {
       steps{
         dir('sources') {
             git branch: "${BRANCH}",
@@ -20,9 +20,11 @@ pipeline {
     }
     stage('Prep Builder') {
       steps{
-        sh 'sudo apt update && sudo apt install -y golang-go debootstrap rsync gpg squashfs-tools git build-essential'
+        sh 'sudo apt-get update && sudo apt-get install -y golang-go debootstrap rsync gpg squashfs-tools git build-essential'
         sh 'go get -d -v github.com/lxc/distrobuilder/distrobuilder'
         sh 'cd $HOME/go/src/github.com/lxc/distrobuilder && make'
+        sh 'mv rootfs.tar.xz keystone.tar.xz'
+        sh 'mv meta.tar.xz keystone-meta.tar.xz'
       }
     }
     stage('Build Keystone') {
@@ -33,7 +35,7 @@ pipeline {
   }
   post {
       always {
-          archiveArtifacts artifacts: "root.tar.xz", fingerprint: true
+          archiveArtifacts artifacts: "*.xz", fingerprint: true
       }
   }
 }
