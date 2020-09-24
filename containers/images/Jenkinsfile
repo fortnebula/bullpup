@@ -27,7 +27,7 @@ pipeline {
     }
     stage('Build Keystone') {
       steps{
-        sh "sudo $HOME/go/bin/distrobuilder containers/images/keystone.yaml -o image.release=${RELEASE}"
+        sh "sudo $HOME/go/bin/distrobuilder build-lxc containers/images/keystone.yaml -o image.release=${RELEASE}"
       }
     }
   }
