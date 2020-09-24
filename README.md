@@ -1,7 +1,7 @@
 ## What is Bullpup
-Bullpup is a prebaked distro of Openstack with a specific method of deployment. It is not made to fit every use case out there or be flexible in any way.
+Bullpup is a prebaked distro of Openstack.  It is not made to fit every use case out there or be flexible in any way.
 
-Bullpup is Openstack for sane people who don't hate themselves.
+Bullpup is Openstack for people who just want to get openstack running quickly without any fuss.
 
 ### How do I use Bullpup
 
