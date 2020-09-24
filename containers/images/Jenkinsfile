@@ -20,7 +20,7 @@ pipeline {
     }
     stage('Prep Builder') {
       steps{
-        sh 'sudo apt update && sudo apt install -y golang-go debootstrap rsync gpg squashfs-tools git'
+        sh 'sudo apt update && sudo apt install -y golang-go debootstrap rsync gpg squashfs-tools git build-essential'
         sh 'go get -d -v github.com/lxc/distrobuilder/distrobuilder'
         sh 'cd $HOME/go/src/github.com/lxc/distrobuilder && make'
       }
