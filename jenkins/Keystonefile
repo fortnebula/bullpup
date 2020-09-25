@@ -18,13 +18,6 @@ pipeline {
           }
       }
     }
-    stage('Prep Builder') {
-      steps{
-        sh 'sudo apt-get update && sudo apt-get install -y golang-go debootstrap rsync gpg squashfs-tools git build-essential'
-        sh 'go get -d -v github.com/lxc/distrobuilder/distrobuilder'
-        sh 'cd $HOME/go/src/github.com/lxc/distrobuilder && make'
-      }
-    }
     stage('Build Keystone') {
       steps{
         sh "sudo $HOME/go/bin/distrobuilder build-dir containers/images/keystone.yaml keystone -o image.release=${RELEASE}"

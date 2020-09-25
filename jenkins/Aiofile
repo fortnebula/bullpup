@@ -18,24 +18,17 @@ pipeline {
           }
       }
     }
-    stage('Prep Builder') {
-      steps{
-        sh 'sudo apt-get update && sudo apt-get install -y golang-go debootstrap rsync gpg squashfs-tools git build-essential'
-        sh 'go get -d -v github.com/lxc/distrobuilder/distrobuilder'
-        sh 'cd $HOME/go/src/github.com/lxc/distrobuilder && make'
-      }
-    }
     stage('Build AIO') {
       steps{
         sh "sudo $HOME/go/bin/distrobuilder build-dir containers/images/aio.yaml aio -o image.release=${RELEASE}"
         sh 'cd aio'
-        sh 'sudo tar -zcf ../openstack.tar.gz .'
+        sh 'sudo tar -zcf ~/openstack.tar.gz .'
       }
     }
   }
   post {
       always {
-          archiveArtifacts artifacts: "*.gz", fingerprint: true
+          archiveArtifacts artifacts: "openstack.tar.gz", fingerprint: true
       }
   }
 }
