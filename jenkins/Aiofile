@@ -28,7 +28,7 @@ pipeline {
   }
   post {
       always {
-          archiveArtifacts artifacts: "~/openstack.tar.gz", fingerprint: true
+          archiveArtifacts artifacts: "openstack.tar.gz", fingerprint: true
       }
   }
 }

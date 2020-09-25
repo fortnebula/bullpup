@@ -28,7 +28,7 @@ pipeline {
   }
   post {
       always {
-          archiveArtifacts artifacts: "~/keystone.tar.gz", fingerprint: true
+          archiveArtifacts artifacts: "keystone.tar.gz", fingerprint: true
       }
   }
 }
