@@ -69,7 +69,7 @@ packages:
       - apt-transport-https
       - keystone
       - mariadb-server 
-      - python-pymysql
+      - python3-pymysql
       - rabbitmq-server
       - apache2
       - glance
