@@ -25,13 +25,6 @@ pipeline {
         sh 'cd $HOME/go/src/github.com/lxc/distrobuilder && make'
       }
     }
-    stage('Build AIO') {
-      steps{
-        sh "sudo $HOME/go/bin/distrobuilder build-dir containers/images/aio.yaml aio -o image.release=${RELEASE}"
-        sh 'cd aio'
-        sh 'sudo tar -zcf ../openstack.tar.gz .'
-
-      }
     stage('Build Keystone') {
       steps{
         sh "sudo $HOME/go/bin/distrobuilder build-dir containers/images/keystone.yaml keystone -o image.release=${RELEASE}"
