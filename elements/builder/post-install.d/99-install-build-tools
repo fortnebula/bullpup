@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+pip3 install diskimage-builder openstacksdk openstackclient
+go get -d -v github.com/lxc/distrobuilder/distrobuilder
+cd $HOME/go/src/github.com/lxc/distrobuilder
+make
+mv $HOME/go/bin/distrobuilder /usr/local/bin/distrobuilder

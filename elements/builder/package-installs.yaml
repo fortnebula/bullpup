@@ -1,0 +1,14 @@
+openjdk-11-jdk-headless:
+python3-pip:
+golang-go:
+debootstrap:
+rsync:
+gpg:
+squashfs-tools:
+git:
+build-essential:
+jq:
+kpartx:
+python3:
+qemu-utils:
+uuid-runtime:
