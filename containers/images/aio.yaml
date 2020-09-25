@@ -1,0 +1,120 @@
+image:
+  name: bullpup-openstack-${BUILD_TIMESTAMP}
+  distribution: ${DISTRO}
+  release: ${RELEASE}
+  description: |-
+    Bullpup AIO Openstack Server {{ image.release }}
+  architecture: x86_64
+
+source:
+  downloader: debootstrap
+  same_as: gutsy
+  url: http://archive.ubuntu.com/ubuntu
+  keyserver: keyserver.ubuntu.com
+  keys:
+    - 0x790BC7277767219C42C86F933B4FE6ACC0B21F32
+
+targets:
+  lxc:
+    create-message: |-
+      You just created an {{ image.description }} container.
+
+    config:
+      - type: all
+        before: 5
+        content: |-
+          lxc.include = LXC_TEMPLATE_CONFIG/ubuntu.common.conf
+
+      - type: all
+        after: 4
+        content: |-
+          lxc.include = LXC_TEMPLATE_CONFIG/common.conf
+
+      - type: all
+        content: |-
+          lxc.arch = {{ image.architecture_personality }}
+
+files:
+ - path: /etc/hostname
+   generator: hostname
+
+ - path: /etc/hosts
+   generator: hosts
+
+ - path: /etc/resolvconf/resolv.conf.d/original
+   generator: remove
+
+ - path: /etc/resolvconf/resolv.conf.d/tail
+   generator: remove
+
+ - path: /etc/machine-id
+   generator: remove
+
+packages:
+  manager: apt
+  update: true
+  cleanup: true
+
+  repositories:
+    - name: sources.list
+      url: |-
+        deb http://archive.ubuntu.com/ubuntu {{ image.release }} main restricted universe multiverse
+        deb http://archive.ubuntu.com/ubuntu {{ image.release }}-updates main restricted universe multiverse
+        deb http://security.ubuntu.com/ubuntu {{ image.release }}-security main restricted universe multiverse
+      architectures:
+        - amd64
+        - i386
+  sets:
+    - packages:
+      - apt-transport-https
+      - keystone
+      - mariadb-server 
+      - python-pymysql
+      - rabbitmq-server
+      - apache2
+      - glance
+      - placement-api
+      - nova-api 
+      - nova-conductor 
+      - nova-novncproxy 
+      - nova-scheduler
+      - nova-compute
+      - neutron-server 
+      - neutron-plugin-ml2 
+      - neutron-l3-agent 
+      - neutron-dhcp-agent 
+      - neutron-metadata-agent
+      - neutron-openvswitch-agent
+      - openvswitch-switch
+      - openstack-dashboard
+      - cinder-api 
+      - cinder-scheduler
+      - cinder-volume
+      - python3-openstackclient
+      action: install
+
+actions:
+  - trigger: post-packages
+    action: |-
+      #!/bin/sh
+      set -eux
+
+      # Make sure the locale is built and functional
+      locale-gen en_US.UTF-8
+      update-locale LANG=en_US.UTF-8
+      apt-get update
+      apt-get upgrade -y
+      apt-get clean
+      apt-get autoclean
+      systemctl disable systemd-resolved
+
+      # Cleanup underlying /run
+      mount -o bind / /mnt
+      rm -rf /mnt/run/*
+      umount /mnt
+
+      # Cleanup temporary shadow paths
+      rm /etc/*-
+
+mappings:
+  architecture_map: debian

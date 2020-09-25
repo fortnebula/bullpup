@@ -25,18 +25,24 @@ pipeline {
         sh 'cd $HOME/go/src/github.com/lxc/distrobuilder && make'
       }
     }
+    stage('Build AIO') {
+      steps{
+        sh "sudo $HOME/go/bin/distrobuilder build-dir containers/images/aio.yaml aio -o image.release=${RELEASE}"
+        sh 'cd aio'
+        sh 'sudo tar -zcf ../openstack.tar.gz .'
+
+      }
     stage('Build Keystone') {
       steps{
-        sh "sudo $HOME/go/bin/distrobuilder build-lxc containers/images/keystone.yaml -o image.release=${RELEASE}"
-        sh 'mv rootfs.tar.xz keystone.tar.xz'
-        sh 'mv meta.tar.xz keystone-meta.tar.xz'
-
+        sh "sudo $HOME/go/bin/distrobuilder build-dir containers/images/keystone.yaml keystone -o image.release=${RELEASE}"
+        sh 'cd keystone'
+        sh 'sudo tar -zcf ../keystone.tar.gz .'
       }
     }
   }
   post {
       always {
-          archiveArtifacts artifacts: "*.xz", fingerprint: true
+          archiveArtifacts artifacts: "*.gz", fingerprint: true
       }
   }
 }
