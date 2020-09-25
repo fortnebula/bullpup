@@ -22,13 +22,14 @@ pipeline {
       steps{
         sh "sudo distrobuilder build-dir containers/images/keystone.yaml keystone -o image.release=${RELEASE}"
         sh 'cd keystone'
-        sh 'sudo tar -zcf ~/keystone.tar.gz .'
+        sh 'sudo tar -zcf ../keystone.tar.gz .'
+        sh 'ls .'
       }
     }
   }
   post {
       always {
-          archiveArtifacts artifacts: "/home/ubuntu/keystone.tar.gz", fingerprint: true
+          archiveArtifacts artifacts: "keystone.tar.gz", fingerprint: true
       }
   }
 }
