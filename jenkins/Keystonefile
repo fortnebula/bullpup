@@ -20,7 +20,7 @@ pipeline {
     }
     stage('Build Keystone') {
       steps{
-        sh "sudo $HOME/go/bin/distrobuilder build-dir containers/images/keystone.yaml keystone -o image.release=${RELEASE}"
+        sh "sudo distrobuilder build-dir containers/images/keystone.yaml keystone -o image.release=${RELEASE}"
         sh 'cd keystone'
         sh 'sudo tar -zcf ../keystone.tar.gz .'
       }

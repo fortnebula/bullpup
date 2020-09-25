@@ -20,7 +20,7 @@ pipeline {
     }
     stage('Build AIO') {
       steps{
-        sh "sudo $HOME/go/bin/distrobuilder build-dir containers/images/aio.yaml aio -o image.release=${RELEASE}"
+        sh "sudo distrobuilder build-dir containers/images/aio.yaml aio -o image.release=${RELEASE}"
         sh 'cd aio'
         sh 'sudo tar -zcf ~/openstack.tar.gz .'
       }
