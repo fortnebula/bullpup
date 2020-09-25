@@ -23,12 +23,13 @@ pipeline {
         sh "sudo distrobuilder build-dir containers/images/aio.yaml aio -o image.release=${RELEASE}"
         sh 'cd aio'
         sh 'sudo tar -zcf ~/openstack.tar.gz .'
+        sh 'pwd'
       }
     }
   }
   post {
       always {
-          archiveArtifacts artifacts: "openstack.tar.gz", fingerprint: true
+          archiveArtifacts artifacts: "/home/ubuntu/openstack.tar.gz", fingerprint: true
       }
   }
 }
